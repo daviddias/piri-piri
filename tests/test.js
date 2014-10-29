@@ -29,8 +29,7 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
   });
 
   after(function (done) {
-
-    pp.stopBrowsers(function() {
+    pp.browserFarm.stop(function() {
       pp.close(function (){
         done();      
       });
@@ -40,11 +39,12 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
 
   test('Spawn and Connect 3 browsers', { timeout: 60 * 1000 }, function (done) {
     var url = pp.serverStats().uri;
-    pp.spawnBrowser(url, 'chrome', function() {});
-    pp.spawnBrowser(url, 'firefox', function() {});
+    // console.log('CONNECT TO: ', url);
+    pp.browserFarm.spawn(url, 'chrome', function() {});
+    pp.browserFarm.spawn(url, 'opera', function() {});
 
     pp.waitForClients(2, function() {
-        var clientIDs = pp.getClientIDs();
+        var clientIDs = pp.clientManager.getClientIDs();
         simpleIDs.A = clientIDs[0];
         simpleIDs.B = clientIDs[1];
         done();      
@@ -52,26 +52,24 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
   });
 
   test('Execute one action in one', function (done) {
-    pp.action(simpleIDs.A, 'sum', {a:5, b:3});
+    var clientA = pp.clientManager.getClient(simpleIDs.A);
+    clientA.action('sum', { a:5, b:3 });
     done();
   });
 
   test('Execute one action in one and check the message', function (done) {
-    pp.action(simpleIDs.A, 'sum-return', {a:2, b:2});
-    setTimeout(function(){
-      var messages = pp.getMessagesByClient(simpleIDs.A);
-      expect(messages.length).to.equal(1);
-      expect(messages[0].total).to.equal(4);
+    var clientA = pp.clientManager.getClient(simpleIDs.A);
+    clientA.action('sum-return', {a:2, b:2});
+    
+    setTimeout(function() {
+      expect(clientA.getMessages().length).to.equal(1);
+      expect(clientA.getMessages()[0].data.total).to.equal(4);
       done();  
-    }, 500);
+    }, 800);
   });
 
-  // test('Execute one action and speficically get the message with the answer to that action', function (done) {
-  //   done();
-  // });
 
-  // test('Execute ten actions in all of three and check messages', function (done) {
-    
+  // test('Execute ten actions in all of three and check messages', function (done) {    
   //   done();
   // });
 

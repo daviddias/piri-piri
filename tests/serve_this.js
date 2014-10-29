@@ -11,10 +11,11 @@ window.app = {
 
       ppClient.registerAction('sum', function (data) {
         var total = data.a + data.b;
-        console.log(total);
+        console.log('sum:' , total);
       });
 
       ppClient.registerAction('sum-return', function (data) {
+        console.log('sum-return');
         ppClient.sendMessage({total: data.a + data.b});
       });
     });
