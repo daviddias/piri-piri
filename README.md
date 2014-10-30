@@ -6,6 +6,7 @@
 **important disclaimer -** This tool is super recent, it has a lot of rough edges and it simply isn't there yet, I will keep developing it because I have a necessity for a tool like this. If you have a scenario where this would be helpful, please share, I would love to hear it and help make it happen!
 
 # Badgers
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/diasdavid/piri-piri?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 
