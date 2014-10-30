@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ![](/img/logo.png)
 
 > **piri-piri** is an browser orchestration tool in order to test decentralized browser applications. Ah and it is hot :)
