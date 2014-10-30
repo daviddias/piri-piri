@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ![](/img/logo.png)
 
 > **piri-piri** is an browser orchestration tool in order to test decentralized browser applications. Ah and it is hot :)
@@ -11,9 +12,7 @@
 # Why does it exists
 
 
-
 / / Simmultaneous browsers - Most browser testing frameworks (that I learned about), only test one browser at a time, checking for browser incompatibilities that our code might have. The goal of piri-piri is to spawn a how many browsers we want and have them interop between each other, while piri-piri orchestrates them remotely.
-
 
 / / Gather information about what happened in the several clients and evaluate the results with external consistency
 
