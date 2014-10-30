@@ -1,21 +1,39 @@
-piri-piri
-=========
+![](/img/logo.png)
 
-**Attention, don't assume that this tool is ready, it is really new and there is a ton of ideas to be refined**
+> **piri-piri** is an browser orchestration tool in order to test decentralized browser applications. Ah and it is hot :)
 
-![](http://www.195524.mrsite.com/123.jpg)
+**important disclaimer -** This tool is super recent, it has a lot of rough edges and it simply isn't there yet, I will keep developing it because I have a necessity for a tool like this. If you have a scenario where this would be helpful, please share, I would love to hear it and help make it happen!
 
-`piri-piri` is the missing tool to test decentralized browser applications. Ah and it's hot! :D
-
-## Problems it tries to solve
-
-Simmultaneous browsers - Most browser testing frameworks (that I learned about), only test one browser at a time, checking for browser incompatibilities that our code might have. The goal of piri-piri is to spawn a how many browsers we want and have them interop between each other, while piri-piri orchestrates them remotely.
-
-
-Gather information about what happened in the several clients and evaluate the results with external consistency
-
-## How to use it
+# Badgers
 
 
 
-http://xquartz.macosforge.org/landing/
+# Why does it exists
+
+
+
+/ / Simmultaneous browsers - Most browser testing frameworks (that I learned about), only test one browser at a time, checking for browser incompatibilities that our code might have. The goal of piri-piri is to spawn a how many browsers we want and have them interop between each other, while piri-piri orchestrates them remotely.
+
+
+/ / Gather information about what happened in the several clients and evaluate the results with external consistency
+
+
+# How to use it
+
+
+
+# How to run the tests
+
+
+
+# Current Issues ( please contribute :) )
+
+## Spawning more browsers
+
+browser-launcher2 && launchpad
+
+xvfb-run on mac
+
+xvfb-run on docker
+
+xvfb-run on Vagrant?

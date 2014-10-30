@@ -34,19 +34,16 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
         done();      
       });
     });
-
   });
 
-  test('Spawn and Connect 3 browsers', { timeout: 60 * 1000 }, function (done) {
+  test('spawn 1 browser', { timeout: 3000 * 1000 }, function (done) {
     var url = pp.serverStats().uri;
-    // console.log('CONNECT TO: ', url);
-    pp.browserFarm.spawn(url, 'chrome', function() {});
-    pp.browserFarm.spawn(url, 'opera', function() {});
+    pp.browserFarm.spawn(url, 'canary', function() {});
+    pp.browserFarm.spawn(url, 'canary', function() {});
 
     pp.waitForClients(2, function() {
         var clientIDs = pp.clientManager.getClientIDs();
         simpleIDs.A = clientIDs[0];
-        simpleIDs.B = clientIDs[1];
         done();      
     }); 
   });
@@ -69,13 +66,13 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
   });
 
 
-  // test('Execute ten actions in all of three and check messages', function (done) {    
-  //   done();
-  // });
-
+  // MOAR TESTS
+  // Connect more browsers to a total of 5
+  // Execute actions in all of them
+  // Verify that all messages where received
+  // Verify the pseudo external consistency
 
   // test('Verify pseudo external consistency', function (done) {
   //   done();
   // });
-
 });
