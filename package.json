@@ -21,6 +21,7 @@
     "browser-launcher2": "^0.4.3",
     "dockerode": "^2.0.4",
     "hapi": "^7.1.1",
+    "launchpad": "^0.4.3",
     "moonboots_hapi": "^3.0.0",
     "socket.io": "^1.2.0"
   },

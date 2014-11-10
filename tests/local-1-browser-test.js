@@ -38,13 +38,13 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
 
   test('spawn 1 browser', { timeout: 3000 * 1000 }, function (done) {
     var url = pp.serverStats().uri;
-    pp.browserFarm.spawn(url, 'canary', function() {});
-    pp.browserFarm.spawn(url, 'canary', function() {});
+    pp.browserFarm.spawn(url, 'canary');
+    pp.browserFarm.spawn(url, 'canary');
 
     pp.waitForClients(2, function() {
-        var clientIDs = pp.clientManager.getClientIDs();
-        simpleIDs.A = clientIDs[0];
-        done();      
+      var clientIDs = pp.clientManager.getClientIDs();
+      simpleIDs.A = clientIDs[0];
+      done();      
     }); 
   });
 
