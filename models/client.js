@@ -18,6 +18,14 @@ exports.createClient = function (_socket) {
     messageQueue = [];
   };
 
+  this.waitToReceive = function (n, cb) {
+    function check() {
+      if (messageQueue.length >= n) { return cb(); } 
+      else { setTimeout(check, 500); }
+    }
+    check();
+  };
+
   this.action = function(command, data) {
     socket.emit(command, data);
   };

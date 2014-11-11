@@ -29,6 +29,7 @@
     "code": "^1.2.0",
     "jshint": "^2.5.6",
     "lab": "^5.0.1",
+    "piri-piri.client": "^0.2.0",
     "precommit-hook": "^1.0.7",
     "tap-spec": "^1.0.1"
   }

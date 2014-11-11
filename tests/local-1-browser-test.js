@@ -11,7 +11,7 @@ var expect = Code.expect;
 
 var pp = require('./../index.js');
 
-experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
+experiment('spicy: ', function () {
 
   var simpleIDs = {};
 
@@ -54,15 +54,15 @@ experiment('A pinch of piri-piri a day, keeps the doctor away.', function () {
     done();
   });
 
-  test('Execute one action in one and check the message', function (done) {
+  test('Execute one action in one and check the message',{timeout: 2 * 60 * 1000},  function (done) {
     var clientA = pp.clientManager.getClient(simpleIDs.A);
-    clientA.action('sum-return', {a:2, b:2});
+    clientA.action('sum-return', { a:2, b:2 });
     
-    setTimeout(function() {
+    clientA.waitToReceive(1, function () {
       expect(clientA.getMessages().length).to.equal(1);
-      expect(clientA.getMessages()[0].data.total).to.equal(4);
-      done();  
-    }, 800);
+      expect(clientA.getMessages()[0].data.message.total).to.equal(4);
+      done();       
+    });
   });
 
 
