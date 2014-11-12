@@ -16,6 +16,6 @@ exports.getClient = function (clientID) {
   return clients[clientID];
 };
 
-exports.getMessagesChronologicalOrder = function () {
+exports.getGlobalPseudoChronologicalOrder = function () {
   // PSEUDO 
 };

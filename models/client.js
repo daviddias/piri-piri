@@ -1,37 +1,44 @@
 var Message = require('./Message.js');
 exports = module.exports;
 
-exports.createClient = function (_socket) {
-  return new client(_socket);
+exports.createClient = function (socket) {
+  return new client(socket);
 };
 
-function client (_socket) {
-  var socket = _socket;
-  var messageQueue = [];
+function client (socket) {
+  var queue = [];
 
-  socket.on('message', function (data) {
-    var message = Message.createMessage(socket.id, data);
-    messageQueue.push(message);
+  socket.on('info', function (info) {
+    var message = Message.createMessage(socket.id, info);
+    queue.push(message);
   });    
 
-  this.getMessages = function() {
-    return messageQueue;
+  this.getQ = function () {
+    return queue;
   };
 
-  this.clearMessages = function() {
-    messageQueue = [];
+  this.clearQ = function () {
+    queue = [];
+  };
+
+  this.sortedQ = function () {
+    // sort pseudo chronologically
   };
 
   this.waitToReceive = function (n, cb) {
     function check() {
-      if (messageQueue.length >= n) { return cb(); } 
-      else { setTimeout(check, 500); }
+      if (queue.length >= n) { 
+        return cb(); 
+      } else { setTimeout(check, 500); }
     }
     check();
   };
 
-  this.action = function(command, data) {
-    socket.emit(command, data);
+  this.command = function(order, data) {
+    socket.emit('execute', {
+      order: order,
+      data: data
+    });
   };
 
   return this;

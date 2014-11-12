@@ -1,12 +1,16 @@
 exports = module.exports;
 
-exports.createMessage = function (_clientID, _data) {
-  this.clientID = _clientID;
-  this.timestamp = Date.now();
-  this.data = _data;
+exports.createMessage = function (clientID, info) {
+  return new message(clientID, info);
+};
+
+function message(clientID, info) {
+  this.clientID = clientID;
+  this.timestamp = info.timestamp;
+  this.data = info.data;
 
   return this;
-};
+}
 
 //
 // clientID - id of the client that sent

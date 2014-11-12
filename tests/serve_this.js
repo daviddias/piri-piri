@@ -1,23 +1,29 @@
-var ppClient = require('piri-piri.client');
+var pp = require('piri-piri.client');
 
 window.app = {
   init: function () {
-    console.log('Resource Loaded');
+    var counter = 0;
 
     var options = { url: 'http://localhost:9876' };
     
-    ppClient.start(options, function () {
+    pp.start(options, function () {
       console.log('piri-piri client is ready');
 
-      ppClient.registerAction('sum', function (data) {
+      pp.register('sum', function (data) {
         var total = data.a + data.b;
         console.log('sum:' , total);
       });
 
-      ppClient.registerAction('sum-return', function (data) {
+      pp.register('sum-return', function (data) {
         console.log('sum-return');
-        ppClient.sendMessage({total: data.a + data.b});
+        pp.tell({total: data.a + data.b});
       });
+
+      pp.register('add-to-counter', function (data) {
+        counter +=1;
+        pp.tell({counter: counter});
+      });
+
     });
   }
 };

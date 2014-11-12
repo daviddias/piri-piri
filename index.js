@@ -25,15 +25,11 @@ exports.start = function (options, cb) {
       plugin: moonboots,
       options: {
         appPath: '/',
-        moonboots: {
-          main: path,
-          developmentMode: true,
-        }
+        moonboots: { main: path, developmentMode: true, }
       }
     }, function () {
       server.start(function () {
         io.listen(server.listener).on('connection', manager.incommingClient);
-        console.log('hapi server started and socket.io server attached\n');
         cb();
       });
   });
@@ -45,7 +41,7 @@ exports.close = function (cb) {
 
 exports.waitForClients = function (n, cb) {
   function wait() {
-    if (manager.getClientIDs().length === n) {
+    if (manager.getClientIDs().length >= n) {
       return cb();
     }
     setTimeout(wait, 500);
@@ -53,6 +49,6 @@ exports.waitForClients = function (n, cb) {
   wait();
 };
 
-exports.serverStats = function(){
-  return server.info;
+exports.uri = function() {
+  return server.info.uri;
 };
