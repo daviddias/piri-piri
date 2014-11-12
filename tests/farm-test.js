@@ -14,23 +14,12 @@ experiment('farm test: ', function () {
   var simpleIDs = {};
 
   before(function (done) {
-    var options = {
-      path: __dirname + '/serve_this.js',
-      port: 9876,
-      host: 'localhost'
-    };
-    
-    pp.start(options, function(err) {
-      if (err) { console.log(err); process.exit(1); }
-      done();
-    });
+    done();
   });
 
   after(function (done) {
     pp.farm.stop(function() {
-      pp.close(function () {
-        done();      
-      });
+      done();      
     });
   });
 

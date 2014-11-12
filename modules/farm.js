@@ -10,7 +10,9 @@ exports.spawn = function (url, browserType, cb) {
     local[browserType](url, function(err, instance) {
       if (browser === undefined) {
         browser = instance; // an instance represents the browser and not each tab
-        instance.on('stop', function() { console.log('Terminated browser instance'); });
+        instance.on('stop', function() { 
+          // console.log('Terminated browser instance'); 
+        });
       }
       
       if (cb) { cb(err); }

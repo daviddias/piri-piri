@@ -35,7 +35,7 @@ experiment('spicy: ', function () {
   });
 
 
-  test('hook 5 clients' , {timeout: 10 * 5 * 1000}, function (done){
+  test('hook 5 clients' , {timeout: 1 * 60 * 1000}, function (done){
     pp.farm.spawn(pp.uri(), 'chrome');
     pp.farm.spawn(pp.uri(), 'chrome');
     pp.farm.spawn(pp.uri(), 'chrome');
@@ -74,56 +74,20 @@ experiment('spicy: ', function () {
   });  
 
 
-  test('exec action with return in each client', function (done) {
-    // var clientA = pp.clientManager.getClient(simpleIDs.A);
-    // clientA.action('sum', { a:5, b:3 });
-    done();
+  test('exec action with return', {timeout: 1 * 60 * 1000}, function (done) {
+    var cA = pp.manager.getClient(simpleIds.A);
+
+    cA.command('sum-return', { a:1, b:8 });
+
+    cA.waitToReceive(1, function () {
+      expect(cA.getQ().length).to.equal(1);
+      expect(cA.getQ()[0].data.total).to.equal(9);
+      cA.clearQ();
+      done();       
+    });
   });  
 
-  test('do counts for pseudo external consistency', function (done) {
-    // var clientA = pp.clientManager.getClient(simpleIDs.A);
-    // clientA.action('sum', { a:5, b:3 });
+  test('do counts for pseudo external consistency'); /*, function (done) {
     done();
-  });  
-
-
-  // test('spawn 1 browser', { timeout: 3000 * 1000 }, function (done) {
-  //   var url = pp.serverStats().uri;
-  //   pp.browserFarm.spawn(url, 'canary');
-  //   pp.browserFarm.spawn(url, 'canary');
-
-  //   pp.waitForClients(2, function() {
-  //     var clientIDs = pp.clientManager.getClientIDs();
-  //     simpleIDs.A = clientIDs[0];
-  //     done();      
-  //   }); 
-  // });
-
-  // test('Execute one action in one', function (done) {
-  //   var clientA = pp.clientManager.getClient(simpleIDs.A);
-  //   clientA.action('sum', { a:5, b:3 });
-  //   done();
-  // });
-
-  // test('Execute one action in one and check the message',{timeout: 2 * 60 * 1000},  function (done) {
-  //   var clientA = pp.clientManager.getClient(simpleIDs.A);
-  //   clientA.action('sum-return', { a:2, b:2 });
-    
-  //   clientA.waitToReceive(1, function () {
-  //     expect(clientA.getMessages().length).to.equal(1);
-  //     expect(clientA.getMessages()[0].data.message.total).to.equal(4);
-  //     done();       
-  //   });
-  // });
-
-
-  // MOAR TESTS
-  // Connect more browsers to a total of 5
-  // Execute actions in all of them
-  // Verify that all messages where received
-  // Verify the pseudo external consistency
-
-  // test('Verify pseudo external consistency', function (done) {
-  //   done();
-  // });
+  }); */  
 });

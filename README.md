@@ -1,4 +1,4 @@
-![](/img/logo.png)
+  ![](/img/logo.png)
 
 > **`piri-piri`** is a browser orchestration to enable decentralized browser applications tests. Ah and it is hot :)
 
@@ -27,20 +27,152 @@ The specific set of problems `piri-piri` tries to solve:
 
 # How to use it (API)
 
-## Launching browsers
+```
+var pp = require('piri-piri');
+```
+
+## Launching browsers 
+
+Open a chrome browser tab in a given url
+```
+pp.farm.spawn('http://www.theinternet.com', 'chrome', function (err) {
+  if (err) { 
+    console.log(err);
+  }
+});
+```
+
+Close the browser process (all tabs)
+```
+pp.farm.stop(function (err){
+  if (err) { 
+    console.log(err);
+  }
+});
+```
+
+## How to test a browser module
+
+Install `piri-piri` and `piri-piri.client`, the first will be our server side component that will orquestrate the several browsers that are launched, the later is a simple tool to hook it to the server
+
+```
+$ npm i piri-piri piri-piri.client
+```
+
+### Instruct
+
+Create a file that is going to be used to require the module you want to test and instruct it with [`piri-piri.client`](https://github.com/diasdavid/piri-piri.client)
 
 
-## Instructing clients
+```
+$ touch serve-this.js
+$ vim serve-this.js
+```
+
+```
+var pp = require('piri-piri.client');
+
+window.app = {
+  init: function () {
+
+    // by default, piri-piri serves on port 9876
+    var options = { url: 'http://localhost:9876' };
+    
+    pp.start(options, function () {
+      console.log('piri-piri client is ready');
+
+      // register a simple action for piri-piri to invoke on the client
+      pp.register('sum', function (data) {
+        var total = data.a + data.b;
+      });
+
+      // register an action for piri-piri to invoke on the client that will return a value to the piri-piri server, so it can be later evaluated
+      pp.register('sum-return', function (data) {
+        pp.tell({total: data.a + data.b});
+      });
+
+    });
+  }
+};
+
+window.app.init();
+```
+
+`piri-piri` uses `browserify` inside `moonboots_hapi` to serve your module
+
+### Serve
+
+Create a `.js` file to be the starting point of our piri-piri tests
+
+```
+$ touch test.js
+$ vim test.js
+```
+
+```
+var pp = require('piri-piri');
+
+var options = {
+  path: __dirname + '/serve_this.js',
+  port: 9876,
+  host: 'localhost'
+};
+
+pp.start(options, function(err) {
+  if (err) { 
+    console.log(err); 
+  }
+});
+```
+
+### Spawn a browser
+
+Spawn a browser and wait for it to get connected
+
+```
+pp.farm.spawn(pp.uri(), 'chrome');
+pp.waitForClients(1, function() {
+      
+});    
+```
+
+### Execute
+
+```
+var clientIds = pp.manager.getClientIDs();
+var clientA = pp.manager.getClient(clientIds[0]);
+clientA.command('sum', { a:1, b:8  });
+```
 
 
-## Read what events have triggered on a client
+### Execute and Evaluate
+
+```
+clientA.command('sum-return', { a:1, b:8 });
+
+clientA.waitToReceive(1, function () {
+  var queue = clientA.getQ();
+  console.log('Sum Result was: ', queue[0].data.total);
+  clientA.clearQ();     
+});
+
+```
 
 
 # How to run the tests
 
-**make sure you have Google Chrome Canary installed**
+**Make sure you have Google Chrome installed**
 
-`$ npm test`
+```
+$ git clone https://github.com/diasdavid/piri-piri.git
+$ git clone https://github.com/diasdavid/piri-piri.client.git
+$ cd piri-piri
+$ npm i 
+$ npm test
+```
+
+
+``
 
 # Roadmap
 
@@ -51,13 +183,13 @@ The specific set of problems `piri-piri` tries to solve:
 - [ ] filters (like packet sniffers)
 - [ ] order all the messages using pseudo external consistency
 - [X] launch browser tabs on demand
-- [ ] **priority** lauch browser tabs properly and scalably (see "Spawning more browsers" Issue below)
+- [~] **priority** launch browser tabs properly and scalably (see "Spawning more browsers" Issue below)
 
 ## piri-piri.client
 - [X] connect to a piri-piri host
 - [X] register actions to be executed when host commands
 - [X] send messages to the host
-- [ ] encapsulate the message to host with more useful information
+- [X] encapsulate the message to host with more useful information
 
 # Current Issues ( please contribute :) )
 

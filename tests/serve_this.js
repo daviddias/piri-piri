@@ -20,7 +20,7 @@ window.app = {
       });
 
       pp.register('add-to-counter', function (data) {
-        counter +=1;
+        counter = data.value;
         pp.tell({counter: counter});
       });
 
