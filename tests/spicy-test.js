@@ -35,20 +35,20 @@ experiment('spicy: ', function () {
   });
 
 
-  test('hook 5 clients' , {timeout: 5 * 1000}, function (done){
-    pp.farm.spawn(pp.uri, 'chrome');
-    pp.farm.spawn(pp.uri, 'chrome');
-    pp.farm.spawn(pp.uri, 'chrome');
-    pp.farm.spawn(pp.uri, 'chrome');
-    pp.farm.spawn(pp.uri, 'chrome');
+  test('hook 5 clients' , {timeout: 10 * 5 * 1000}, function (done){
+    pp.farm.spawn(pp.uri(), 'chrome');
+    pp.farm.spawn(pp.uri(), 'chrome');
+    pp.farm.spawn(pp.uri(), 'chrome');
+    pp.farm.spawn(pp.uri(), 'chrome');
+    pp.farm.spawn(pp.uri(), 'chrome');
 
     pp.waitForClients(5, function() {
-      var clientIDs = pp.clientManager.getClientIDs();
-      simpleIds.A = clientIDs[0];
-      simpleIds.B = clientIDs[1];
-      simpleIds.C = clientIDs[2];
-      simpleIds.D = clientIDs[3];
-      simpleIds.E = clientIDs[4];
+      var clientIds = pp.manager.getClientIDs();
+      simpleIds.A = clientIds[0];
+      simpleIds.B = clientIds[1];
+      simpleIds.C = clientIds[2];
+      simpleIds.D = clientIds[3];
+      simpleIds.E = clientIds[4];
       expect(simpleIds.A).to.not.equal(simpleIds.B);
       expect(simpleIds.B).to.not.equal(simpleIds.C);
       expect(simpleIds.C).to.not.equal(simpleIds.D);
@@ -56,14 +56,20 @@ experiment('spicy: ', function () {
       expect(simpleIds.E).to.not.equal(simpleIds.A);
       done();      
     });     
-
-
-    done();
   });
 
   test('exec simple action in each client', function (done) {
-    // var clientA = pp.clientManager.getClient(simpleIDs.A);
-    // clientA.action('sum', { a:5, b:3 });
+    var cA = pp.manager.getClient(simpleIds.A);
+    var cB = pp.manager.getClient(simpleIds.B);
+    var cC = pp.manager.getClient(simpleIds.C);
+    var cD = pp.manager.getClient(simpleIds.D);
+    var cE = pp.manager.getClient(simpleIds.E);
+
+    cA.command('sum', { a:1, b:8  });
+    cB.command('sum', { a:1, b:13 });
+    cC.command('sum', { a:2, b:21 });
+    cD.command('sum', { a:3, b:34 });
+    cE.command('sum', { a:5, b:55 });
     done();
   });  
 

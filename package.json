@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/.bin/lab -r tap tests/*-test.js | ./node_modules/.bin/tap-spec"
+    "test": "node ./node_modules/.bin/lab -r tap tests/spicy-test.js | ./node_modules/.bin/tap-spec",
+    "test-farm": "node ./node_modules/.bin/lab -r tap tests/farm-test.js | ./node_modules/.bin/tap-spec"
   },
   "repository": {
     "type": "git",
