@@ -27,7 +27,7 @@ experiment('spicy: ', function () {
   });
 
   after(function (done) {
-    pp.browserFarm.stop(function() {
+    pp.farm.stop(function() {
       pp.close(function () {
         done();      
       });
@@ -36,6 +36,28 @@ experiment('spicy: ', function () {
 
 
   test('hook 5 clients' , {timeout: 5 * 1000}, function (done){
+    pp.farm.spawn(pp.uri, 'chrome');
+    pp.farm.spawn(pp.uri, 'chrome');
+    pp.farm.spawn(pp.uri, 'chrome');
+    pp.farm.spawn(pp.uri, 'chrome');
+    pp.farm.spawn(pp.uri, 'chrome');
+
+    pp.waitForClients(5, function() {
+      var clientIDs = pp.clientManager.getClientIDs();
+      simpleIds.A = clientIDs[0];
+      simpleIds.B = clientIDs[1];
+      simpleIds.C = clientIDs[2];
+      simpleIds.D = clientIDs[3];
+      simpleIds.E = clientIDs[4];
+      expect(simpleIds.A).to.not.equal(simpleIds.B);
+      expect(simpleIds.B).to.not.equal(simpleIds.C);
+      expect(simpleIds.C).to.not.equal(simpleIds.D);
+      expect(simpleIds.D).to.not.equal(simpleIds.E);
+      expect(simpleIds.E).to.not.equal(simpleIds.A);
+      done();      
+    });     
+
+
     done();
   });
 
