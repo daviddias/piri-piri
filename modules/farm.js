@@ -3,22 +3,21 @@ var async = require('async');
 
 exports = module.exports;
 
-var browsers = [];
+var browser;
 
 exports.spawn = function (url, browserType, cb) {
   launch.local(function(err, local) {
     local[browserType](url, function(err, instance) {
-      browsers.push(instance);
-      instance.on('stop', function() { console.log('Terminated browser instance'); });
-      if (cb) { cb(); }
+      if (browser === undefined) {
+        browser = instance; // an instance represents the browser and not each tab
+        instance.on('stop', function() { console.log('Terminated browser instance'); });
+      }
+      
+      if (cb) { cb(err); }
     });
   });
 };
 
 exports.stop = function (cb) {
-  async.map(browsers, function (browser, cbAsync) {
-    browser.stop(cbAsync);
-  }, function(err, results){
-    cb(err);
-  });
+  browser.stop(cb);
 };

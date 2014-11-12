@@ -2,12 +2,12 @@ var hapi = require('hapi');
 var moonboots = require('moonboots_hapi');
 var io = require('socket.io');
 var async = require('async');
-var clientManager = require('./modules/clientManager.js');
-var browserFarm = require('./modules/browserFarm.js');
+var manager = require('./modules/manager.js');
+var farm = require('./modules/farm.js');
 
 exports = module.exports;
-exports.clientManager = clientManager;
-exports.browserFarm = browserFarm;
+exports.manager = manager;
+exports.farm = farm;
 
 var server;
 
@@ -32,7 +32,7 @@ exports.start = function (options, cb) {
       }
     }, function () {
       server.start(function () {
-        io.listen(server.listener).on('connection', clientManager.incommingClient);
+        io.listen(server.listener).on('connection', manager.incommingClient);
         console.log('hapi server started and socket.io server attached\n');
         cb();
       });
@@ -45,7 +45,7 @@ exports.close = function (cb) {
 
 exports.waitForClients = function (n, cb) {
   function wait() {
-    if (clientManager.getClientIDs().length === n) {
+    if (manager.getClientIDs().length === n) {
       return cb();
     }
     setTimeout(wait, 500);

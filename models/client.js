@@ -2,6 +2,10 @@ var Message = require('./Message.js');
 exports = module.exports;
 
 exports.createClient = function (_socket) {
+  return new client(_socket);
+};
+
+function client (_socket) {
   var socket = _socket;
   var messageQueue = [];
 
@@ -31,4 +35,4 @@ exports.createClient = function (_socket) {
   };
 
   return this;
-};
+}
