@@ -5,7 +5,7 @@ window.app = {
     var counter = 0;
 
     var options = { url: 'http://localhost:9876' };
-    
+
     pp.start(options, function () {
       console.log('piri-piri client is ready');
 

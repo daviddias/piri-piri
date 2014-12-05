@@ -25,7 +25,7 @@ exports.start = function (options, cb) {
       plugin: moonboots,
       options: {
         appPath: '/',
-        moonboots: { main: path, developmentMode: true, }
+        moonboots: { main: path, developmentMode: true }
       }
     }, function () {
       server.start(function () {

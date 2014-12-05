@@ -36,11 +36,11 @@ experiment('spicy: ', function () {
 
 
   test('hook 5 clients' , {timeout: 1 * 60 * 1000}, function (done){
-    pp.farm.spawn(pp.uri(), 'chrome');
-    pp.farm.spawn(pp.uri(), 'chrome');
-    pp.farm.spawn(pp.uri(), 'chrome');
-    pp.farm.spawn(pp.uri(), 'chrome');
-    pp.farm.spawn(pp.uri(), 'chrome');
+    pp.farm.spawn(pp.uri(), 'canary');
+    pp.farm.spawn(pp.uri(), 'canary');
+    pp.farm.spawn(pp.uri(), 'canary');
+    pp.farm.spawn(pp.uri(), 'canary');
+    pp.farm.spawn(pp.uri(), 'canary');
 
     pp.waitForClients(5, function() {
       var clientIds = pp.manager.getClientIDs();
