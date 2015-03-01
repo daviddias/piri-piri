@@ -7,7 +7,7 @@
 # Badgers
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/diasdavid/piri-piri?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# Why does it exists
+# Why does it exist
 
 There are a panoply of excellent browser testing frameworks and services available today, however their focus is on testing browser implementations (CSS, HTML and JavaScript) and user interactions of the apps their are testing (clicks, mouse movements, what the user sees). 
 
