@@ -1,8 +1,9 @@
-  ![](/img/logo.png)
-
 > **`piri-piri`** is a browser orchestration to enable decentralized browser applications tests. Ah and it is hot :)
 
-**important disclaimer -** This tool is super new, it has a ton of rough edges and it simply isn't there yet, I will keep devoting time to it because I have a necessity for a tool like this. If you have happen to have a scenario where it would be useful, please share, I would love to hear and help make it happen!
+![](/img/logo.png)
+
+
+**important disclaimer -** This tool is recent, it has a its rough edges. I will keep devoting time to it because I have a necessity for a tool like this. If you have happen to have a scenario where it would be useful, please share, I would love to hear and help make it happen!
 
 # Badgers
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/diasdavid/piri-piri?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
