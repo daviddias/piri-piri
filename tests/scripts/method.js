@@ -1,8 +1,9 @@
 const ppc = require('../../src').client
 
 module.exports = function (args) {
-  ppc.handle('sum', (a, b) => {
-    ppc.send('msg', 'the sum is: ' + a + b)
+  ppc.handle('sum', (arr) => {
+    var sum = Number(arr[0] + arr[1])
+    ppc.send(sum)
   })
 
   ppc.connect((err) => {

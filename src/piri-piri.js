@@ -24,7 +24,7 @@ exports.start = (callback) => {
     clients[sock.id].socket = sock
     clients[sock.id].msgs = []
 
-    clients[sock.id].socket.on('msg', (data) => {
+    sock.on('msg', (data) => {
       clients[sock.id].msgs.push(data)
     })
 
@@ -83,10 +83,15 @@ exports.browser.send = function (id, action) {
   if (!clients[id]) {
     throw new Error('no client with that Id')
   }
+
   var args = Object.keys(arguments).map((key) => { return arguments[key] })
 
   args.shift()
   args.shift()
 
   clients[id].socket.emit(action, args)
+
+  if (action === 'exit') {
+    delete clients[id]
+  }
 }
