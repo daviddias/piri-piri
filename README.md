@@ -27,175 +27,82 @@ The specific set of problems `piri-piri` tries to solve:
 
 # How to use it (API)
 
-```
-var pp = require('piri-piri');
-```
-
-## Launching browsers 
-
-Open a chrome browser tab in a given url
-```
-pp.farm.spawn('http://www.theinternet.com', 'chrome', function (err) {
-  if (err) { 
-    console.log(err);
-  }
-});
+```JavaScript
+const pp = require('piri-piri')
 ```
 
-Close the browser process (all tabs)
-```
-pp.farm.stop(function (err){
-  if (err) { 
-    console.log(err);
-  }
-});
-```
+## Starting piri-piri
 
-## How to test a browser module
+piri-piri needs to get initialized in order to create a WebSockets server which will be used as the bridge to transfer messages between your Node.js process where tests and assertions are being run and the browsers that get instantiated. To start it, do:
 
-Install `piri-piri` and `piri-piri.client`, the first will be our server side component that will orquestrate the several browsers that are launched, the later is a simple tool to hook it to the server
-
-```
-$ npm i piri-piri piri-piri.client
+```JavaScript
+pp.start((err) => {
+  done()
+})
 ```
 
-### Instruct
+## Launching an instance
 
-Create a file that is going to be used to require the module you want to test and instruct it with [`piri-piri.client`](https://github.com/diasdavid/piri-piri.client)
+In fact, what will get launched are headless electron processes.
 
-
-```
-$ touch serve-this.js
-$ vim serve-this.js
-```
-
-```
-var pp = require('piri-piri.client');
-
-window.app = {
-  init: function () {
-
-    // by default, piri-piri serves on port 9876
-    var options = { url: 'http://localhost:9876' };
-    
-    pp.start(options, function () {
-      console.log('piri-piri client is ready');
-
-      // register a simple action for piri-piri to invoke on the client
-      pp.register('sum', function (data) {
-        var total = data.a + data.b;
-      });
-
-      // register an action for piri-piri to invoke on the client that will return a value to the piri-piri server, so it can be later evaluated
-      pp.register('sum-return', function (data) {
-        pp.tell({total: data.a + data.b});
-      });
-
-    });
-  }
-};
-
-window.app.init();
+```JavaScript
+pp.browser.spawn(<scriptPath>, <quantity>, (err) => {
+  if (err) { }
+  // ..
+})
 ```
 
-`piri-piri` uses `browserify` inside `moonboots_hapi` to serve your module
+`scriptPath` is the path to the script that you want to run in the browser
 
-### Serve
+## How should your script to run on the browser look like
 
-Create a `.js` file to be the starting point of our piri-piri tests
+```JavaScript
+const ppc = require('../../src').client
 
-```
-$ touch test.js
-$ vim test.js
-```
-
-```
-var pp = require('piri-piri');
-
-var options = {
-  path: __dirname + '/serve_this.js',
-  port: 9876,
-  host: 'localhost'
-};
-
-pp.start(options, function(err) {
-  if (err) { 
-    console.log(err); 
-  }
-});
+module.exports = function (args) {
+  ppc.connect((err, socket) => { // do this when you want to tell piri-piri that your app is ready
+    if (err) {
+      return console.log(err)
+    }
+    socket.on('exit', ppc.exit)
+  })
+}
 ```
 
-### Spawn a browser
+### Instruct a comamnd, a 'sum function' example
 
-Spawn a browser and wait for it to get connected
+browser app
 
-```
-pp.farm.spawn(pp.uri(), 'chrome');
-pp.waitForClients(1, function() {
-      
-});    
-```
+```JavaScript
+const ppc = require('../../src').client
 
-### Execute
+module.exports = function (args) {
+  ppc.handle('sum', (arr) => {
+    var sum = Number(arr[0] + arr[1])
+    ppc.send(sum)
+  })
 
-```
-var clientIds = pp.manager.getClientIDs();
-var clientA = pp.manager.getClient(clientIds[0]);
-clientA.command('sum', { a:1, b:8  });
-```
-
-
-### Execute and Evaluate
-
-```
-clientA.command('sum-return', { a:1, b:8 });
-
-clientA.waitToReceive(1, function () {
-  var queue = clientA.getQ();
-  console.log('Sum Result was: ', queue[0].data.total);
-  clientA.clearQ();     
-});
-
+  ppc.connect((err) => {
+    if (err) {
+      return console.log(err)
+    }
+  })
+}
 ```
 
+tests side
 
-# How to run the tests
-
-**Make sure you have Google Chrome installed**
-
+```JavaScript
+pp.browser.spawn('./tests/scripts/method.js', 1, (err) => {
+  if (err) { }
+  var id = Object.keys(pp.clients)[0] // should be 0, electron is not being properly closed
+  pp.browser.send(id, 'sum', 2, 2)
+  setTimeout(() => {
+    console.log(pp.clients[id].msgs[0]) // the 
+    pp.browser.send(id, 'exit')
+  }, 500)
+})
 ```
-$ git clone https://github.com/diasdavid/piri-piri.git
-$ git clone https://github.com/diasdavid/piri-piri.client.git
-$ cd piri-piri
-$ npm i 
-$ npm test
-```
-
-
-``
-
-# Roadmap
-
-## piri-piri
-- [X] serve the app (browserify main .js file and serve that)
-- [X] save clients as they connect
-- [X] queue messages by client
-- [ ] filters (like packet sniffers)
-- [ ] order all the messages using pseudo external consistency
-- [X] launch browser tabs on demand
-- [~] **priority** launch browser tabs properly and scalably (see "Spawning more browsers" Issue below)
-
-## piri-piri.client
-- [X] connect to a piri-piri host
-- [X] register actions to be executed when host commands
-- [X] send messages to the host
-- [X] encapsulate the message to host with more useful information
-
-# Current Issues ( please contribute :) )
-
-These are implementation issues I've faced and that I would be more than thankful to hear your input. 
-
-https://github.com/diasdavid/piri-piri/issues
 
 # Initial Development
 
