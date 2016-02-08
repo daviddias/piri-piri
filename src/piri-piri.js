@@ -5,7 +5,7 @@ const debug = require('debug')
 const log = debug('piri-piri')
 
 var started = false
-const clients = {}
+const clients = {} // socket and msgs
 
 exports = module.exports
 
@@ -20,21 +20,19 @@ exports.start = (callback) => {
   io.on('connection', (sock) => {
     log('new conn', sock.id)
 
-    clients[sock.id] = sock
+    clients[sock.id] = {}
+    clients[sock.id].socket = sock
+    clients[sock.id].msgs = []
+
+    clients[sock.id].socket.on('msg', (data) => {
+      clients[sock.id].msgs.push(data)
+    })
 
     sock.on('close', () => {
       delete clients[sock.id]
     })
   })
-  const api = {
-    send: (id, msg, data) => {
-      if (!clients[id]) {
-        throw new Error('no client with that Id')
-      }
-      clients[id].emit(msg, data)
-    }
-  }
-  callback(null, api)
+  callback()
 }
 
 exports.browser = {}
@@ -44,20 +42,51 @@ exports.browser.spawn = (scriptPath, quantity, callback) => {
     throw new Error('piri-piri listener is not started yet')
   }
 
-  const instance = electron(scriptPath, {
-    detached: true
-  })
+  var counter = 0
+  while (counter < quantity) {
+    spawnOne(scriptPath)
+    counter += 1
+  }
 
-  const errors = []
+  function spawnOne (scriptPath) {
+    const instance = electron(scriptPath, {
+      detached: true
+    })
 
-  instance.on('exit', () => {
-    if (errors.length > 0) {
-      return callback(errors)
+    const errors = []
+
+    instance.stderr.on('data', function (data) {
+      errors.push(data.toString())
+    })
+
+    instance.stdout.on('data', function (data) {
+      console.log(data.toString())
+    })
+
+    instance.on('exit', () => {
+      counter--
+      if (counter === 0) {
+        end()
+      }
+    })
+
+    function end () {
+      if (errors.length > 0) {
+        return callback(errors)
+      }
+      callback()
     }
-    callback()
-  })
+  }
+}
 
-  instance.stderr.on('data', function (data) {
-    errors.push(data.toString())
-  })
+exports.browser.send = function (id, action) {
+  if (!clients[id]) {
+    throw new Error('no client with that Id')
+  }
+  var args = Object.keys(arguments).map((key) => { return arguments[key] })
+
+  args.shift()
+  args.shift()
+
+  clients[id].socket.emit(action, args)
 }
