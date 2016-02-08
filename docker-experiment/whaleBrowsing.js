@@ -1,9 +1,8 @@
-var Docker = require('dockerode');
-var fs = require('fs');
+var Docker = require('dockerode')
+var fs = require('fs')
 // var docker = new Docker({
 //   socketPath: '/var/run/docker.sock'
-// });
-
+// })
 
 // https://github.com/apocas/dockerode/issues/100
 
@@ -14,9 +13,9 @@ var docker = new Docker({
   ca: fs.readFileSync(process.env.DOCKER_CERT_PATH + '/ca.pem'),
   cert: fs.readFileSync(process.env.DOCKER_CERT_PATH + '/cert.pem'),
   key: fs.readFileSync(process.env.DOCKER_CERT_PATH + '/key.pem')
-});
+})
 
-// var docker = new Docker({protocol:'tcp', host: '192.168.59.103', port: 2376});
+// var docker = new Docker({protocol:'tcp', host: '192.168.59.103', port: 2376})
 // xvfb-run --server-args='-screen 0, 1024x768x16' google-chrome -start-maximized http://7631f333.ngrok.com > /dev/null &
 
 // xvfb-run -e /dev/stdout --server-args='-screen 0, 1024x768x16' google-chrome --disable-webgl -start-maximized http://7631f333.ngrok.com  &
@@ -30,18 +29,18 @@ var docker = new Docker({
 // cd /examples/build
 // node run.js
 
-docker.buildImage('./Dockerfile.tar', {t: 'chrome'}, function(err, stream) {
-  if(err) {
-    return console.log(err);
+docker.buildImage('./Dockerfile.tar', {t: 'chrome'}, function (err, stream) {
+  if (err) {
+    return console.log(err)
   }
 
-  stream.pipe(process.stdout, {end: true});
+  stream.pipe(process.stdout, {end: true})
 
-  stream.on('end', function() {
-    console.log('image mounted');
-    // done();
-  });
-});
+  stream.on('end', function () {
+    console.log('image mounted')
+  // done()
+  })
+})
 
 // function done() {
 //   docker.createContainer({
@@ -54,15 +53,15 @@ docker.buildImage('./Dockerfile.tar', {t: 'chrome'}, function(err, stream) {
 //       stderr: true,
 //       tty: true
 //     }, function(err, stream) {
-//       if(err) return;
+//       if(err) return
 
-//       stream.pipe(process.stdout);
+//       stream.pipe(process.stdout)
 
 //       container.start({
 //         Privileged: true
 //       }, function(err, data) {
-//         if(err) return;
-//       });
-//     });
-//   });
+//         if(err) return
+//       })
+//     })
+//   })
 // }
