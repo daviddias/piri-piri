@@ -1,6 +1,6 @@
 {
   "name": "piri-piri",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "piri-piri is a browser orchestration to enable decentralized browser applications tests. Ah and it is hot :)",
   "main": "src/index.js",
   "scripts": {
